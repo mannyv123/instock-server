@@ -1,5 +1,4 @@
 const knex = require("knex")(require("./knexfile"));
-
 const cors = require("cors");
 const express = require("express");
 const app = express();
