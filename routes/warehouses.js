@@ -6,7 +6,8 @@ router.get("/api/warehouses", (req, res) => {
   res.send("NOT IMPLEMENTED: returns a list of warehouses");
 });
 
-// I am working on J2VT1-15 here. -GJ
+// ------JIRA TICKET #J2VT1-15 -GJ-------------------------------------
+
 router.get("/api/warehouses/:id", (req, res) => {
   // we are extracting id from params here and storing it in id variable.
   // we are using the same id variable in knex("warehouses").
@@ -16,13 +17,16 @@ router.get("/api/warehouses/:id", (req, res) => {
     .first()
     .then((data) => {
       if (data) {
-        res.json(data);
+        // This sends 200 if found
+        res.status(200).json(data);
       } else {
         // This sends 404 not found if not found
         res.sendStatus(404);
       }
     });
 });
+
+// --------------------------------------------------------------------
 
 router.post("/api/warehouses", (req, res) => {
   res.send("NOT IMPLEMENTED: create a warehouse");

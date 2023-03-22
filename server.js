@@ -13,19 +13,6 @@ const inventoriesRouter = require("./routes/inventories");
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 
-// ---WORKBENCH NOT WORKING FOR SOME REASON. USING THIS TO SEE IF IT'S WORKING -GJ----
-
-// app.get("/test", (req, res) => {
-//   knex
-//     .select("*")
-//     .from("inventories")
-//     .then((data) => {
-//       res.json(data);
-//     });
-// });
-
-// --------------------------------------------------------------------------------
-
 app.use(cors());
 // app.use(express.static("public"));
 app.use(express.json());
