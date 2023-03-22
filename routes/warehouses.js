@@ -21,10 +21,11 @@ router.put("/api/warehouses/:id", (req, res) => {
 //-----------Manjot Code Start------------------------
 
 //Endpoint to delete a warehouse
+//**** need migrations/seeding data to test ******************
 router.delete("/warehouses/:id", (req, res) => {
     const { warehouseId } = req.params;
     knex("warehouses")
-        .where("id", warehouseId)
+        .where({ id: warehouseId })
         .del()
         .then((response) => {
             res.status(204).send("NOT IMPLEMENTED: delete a specific warehouse");
