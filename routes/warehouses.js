@@ -26,6 +26,7 @@ router.delete("/warehouses/:id", (req, res) => {
     knex("warehouses")
         .where({ id: req.params.id })
         .then((data) => {
+            //check first if data exists; if so, delete the warehouse
             if (data.length) {
                 knex("warehouses")
                     .delete()
@@ -34,12 +35,15 @@ router.delete("/warehouses/:id", (req, res) => {
                         res.status(204).send();
                     })
                     .catch((error) => {
+                        //send error if delete not successful
                         res.status(404).send(`Warehouse ID not found ${error}`);
                     });
             } else {
+                //send error if warehouse ID does not exist
                 res.status(404).send(`Warehouse ID ${req.params.id} not found`);
             }
         })
+        //send error if selecting the id errors out
         .catch((error) => {
             res.status(404).send(`Warehouse ID not found ${error}`);
         });
