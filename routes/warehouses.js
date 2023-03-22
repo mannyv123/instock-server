@@ -1,3 +1,4 @@
+const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 
@@ -17,10 +18,23 @@ router.put("/warehouses/:id", (req, res) => {
   res.send("NOT IMPLEMENTED: update specific warehouse");
 });
 
+//-----------Manjot Code Start------------------------
+
+//Endpoint to delete a warehouse
+//**** need migrations/seeding data to test ******************
 router.delete("/warehouses/:id", (req, res) => {
-  res.send("NOT IMPLEMENTED: delete a specific warehouse");
+    const { warehouseId } = req.params;
+    knex("warehouses")
+        .where({ id: warehouseId })
+        .del()
+        .then((response) => {
+            res.status(204).send("NOT IMPLEMENTED: delete a specific warehouse");
+        })
+        .catch((error) => {
+            res.status(404).send("Warehouse ID not found");
+        });
 });
 
-
+//-----------Manjot Code End--------------------------
 
 module.exports = router;
