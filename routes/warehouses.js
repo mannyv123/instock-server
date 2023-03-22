@@ -2,20 +2,20 @@ const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 
-router.get("/api/warehouses", (req, res) => {
-    res.send("NOT IMPLEMENTED: returns a list of warehouses");
+router.get("/warehouses", (req, res) => {
+  res.send("NOT IMPLEMENTED: returns a list of warehouses");
 });
 
-router.get("/api/warehouses/:id", (req, res) => {
-    res.send("NOT IMPLEMENTED: returns a specific warehouse");
+router.get("/warehouses/:id", (req, res) => {
+  res.send("NOT IMPLEMENTED: returns a specific warehouse");
 });
 
-router.post("/api/warehouses", (req, res) => {
-    res.send("NOT IMPLEMENTED: create a warehouse");
+router.post("/warehouses", (req, res) => {
+  res.send("NOT IMPLEMENTED: create a warehouse");
 });
 
-router.put("/api/warehouses/:id", (req, res) => {
-    res.send("NOT IMPLEMENTED: update specific warehouse");
+router.put("/warehouses/:id", (req, res) => {
+  res.send("NOT IMPLEMENTED: update specific warehouse");
 });
 
 //-----------Manjot Code Start------------------------
