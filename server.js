@@ -12,6 +12,8 @@ require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+// This allos us to use x-www format
+app.use(express.urlencoded({ extended: true }));
 // app.use(express.static("public"));
 app.use(express.json());
 
@@ -20,5 +22,5 @@ app.use("/api", warehousesRouter);
 app.use("/api", inventoriesRouter);
 
 app.listen(PORT, () => {
-    console.log(`Express server listening on port ${PORT}`);
+  console.log(`Express server listening on port ${PORT}`);
 });
