@@ -29,24 +29,24 @@ router.get('/warehouses', (req, res) => {
 
 // GET /api/warehouses/:id
 router.get("/warehouses/:id", async (req, res) => {
-    try {
-        // we are extracting id from params here and storing it in id variable.
-        // we are using the same id variable in knex("warehouses").
-        const { id } = req.params;
-
-        const result = await knex("warehouses").where("id", id).first();
-        if (result) {
-            // This sends 200 if found
-            res.status(200).json(result);
-        } else {
-            // This sends 404 not found if not found
-            res.status(404).send(`Warehouse ${id} Not Found`);
-        }
-    } catch (error) {
-        // catches all errors
-        res.status(404).send(`Warehouse ${id} Not Found`);
-        console.log(error);
+  try {
+    // we are extracting id from params here and storing it in id variable.
+    // we are using the same id variable in knex("warehouses").
+    const { id } = req.params;
+    // This gives us a single warehouse based on the id.
+    const result = await knex("warehouses").where("id", id).first();
+    if (result) {
+      // This sends 200 if found
+      res.status(200).json(result);
+    } else {
+      // This sends 404 not found if not found
+      res.status(404).send(`Warehouse ${id} Not Found`);
     }
+  } catch (error) {
+    // catches all errors
+    res.status(404).send(`Warehouse ${id} Not Found`);
+    console.log(error);
+  }
 });
 
 // -----------------GJ CODE END----------------------------------------
