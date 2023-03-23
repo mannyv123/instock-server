@@ -4,9 +4,26 @@ const router = express.Router();
 const knex = require("knex")(require("../knexfile"));
 const { v4: uuidv4 } = require("uuid");
 
-router.get("/warehouses", (req, res) => {
-  res.send("NOT IMPLEMENTED: returns a list of warehouses");
+// router.get("/warehouses", (req, res) => {
+//   res.send("NOT IMPLEMENTED: returns a list of warehouses");
+// });
+
+// ------JIRA TICKET #J2VT1-14 -  FELIPE-------------------------------------
+
+router.get('/warehouses', (req, res) => {
+  knex('warehouses')
+    .select('*')
+    .then(warehouses =>{
+      res.status(200).json(warehouses);
+    })
+    .catch(err =>{
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
 });
+
+// ------ FELIPE CODE END-------------------------------------
+
 
 // ------JIRA TICKET #J2VT1-15 -GJ-------------------------------------
 
@@ -131,5 +148,9 @@ router.delete("/warehouses/:id", (req, res) => {
 });
 
 //-----------Manjot Code End--------------------------
+
+
+
+
 
 module.exports = router;
