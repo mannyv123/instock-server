@@ -16,7 +16,7 @@ router.get("/warehouses/:id", async (req, res) => {
     // we are extracting id from params here and storing it in id variable.
     // we are using the same id variable in knex("warehouses").
     const { id } = req.params;
-
+    // This gives us a single warehouse based on the id.
     const result = await knex("warehouses").where("id", id).first();
     if (result) {
       // This sends 200 if found
