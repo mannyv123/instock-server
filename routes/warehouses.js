@@ -2,6 +2,7 @@ const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 const knex = require("knex")(require("../knexfile"));
+const { v4: uuidv4 } = require("uuid");
 
 router.get("/warehouses", (req, res) => {
   res.send("NOT IMPLEMENTED: returns a list of warehouses");
@@ -9,29 +10,91 @@ router.get("/warehouses", (req, res) => {
 
 // ------JIRA TICKET #J2VT1-15 -GJ-------------------------------------
 
-router.get("/warehouses/:id", (req, res) => {
-  // we are extracting id from params here and storing it in id variable.
-  // we are using the same id variable in knex("warehouses").
-  const { id } = req.params;
-  knex("warehouses")
-    .where("id", id)
-    .first()
-    .then((data) => {
-      if (data) {
-        // This sends 200 if found
-        res.status(200).json(data);
-      } else {
-        // This sends 404 not found if not found
-        res.sendStatus(404);
-      }
-    });
+// GET /api/warehouses/:id
+router.get("/warehouses/:id", async (req, res) => {
+  try {
+    // we are extracting id from params here and storing it in id variable.
+    // we are using the same id variable in knex("warehouses").
+    const { id } = req.params;
+
+    const result = await knex("warehouses").where("id", id).first();
+    if (result) {
+      // This sends 200 if found
+      res.status(200).json(result);
+    } else {
+      // This sends 404 not found if not found
+      res.status(404).send(`Warehouse ${id} Not Found`);
+    }
+  } catch (error) {
+    // catches all errors
+    res.status(404).send(`Warehouse ${id} Not Found`);
+    console.log(error);
+  }
 });
 
 // -----------------GJ CODE END----------------------------------------
 
-router.post("/warehouses", (req, res) => {
-  res.send("NOT IMPLEMENTED: create a warehouse");
+// ------JIRA TICKET #J2VT1-16 -GJ-------------------------------------
+// POST /api/warehouses
+router.post("/warehouses", async (req, res) => {
+  // req is the client. res is the response from the server
+  try {
+    const {
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    } = req.body; // This is the payload we are receiving from the client
+
+    const re_email = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}"); // regular expression matches w something@something.com
+    const re_phone = new RegExp("[0-9]{3}[0-9]{3}[0-9]{4}"); // regular expression matches w 1231231234
+
+    // This is validation
+    if (
+      warehouse_name === "" ||
+      address === "" ||
+      city === "" ||
+      country === "" ||
+      contact_name === "" ||
+      contact_position === "" ||
+      contact_phone === "" ||
+      // test compares the regular expression with contact_phone.
+      // "!" if it's true, it means it's valid.
+      !re_phone.test(contact_phone) ||
+      contact_email === "" ||
+      !re_email.test(contact_email)
+    ) {
+      // 400 status means "Bad Request"
+      res.status(400).send("Sorry! Invalid values");
+    } else {
+      // validated
+      // This is the payload we are giving to the database.
+      const warehouse_object = {
+        id: uuidv4(),
+        warehouse_name,
+        address,
+        city,
+        country,
+        contact_name,
+        contact_position,
+        contact_phone,
+        contact_email,
+      };
+
+      const result = await knex("warehouses").insert(warehouse_object);
+      res.status(201).send(warehouse_object);
+    }
+  } catch (error) {
+    // catches all errors
+    res.status(400).send("Sorry! Invalid values");
+    console.log(error);
+  }
 });
+// -----------------GJ CODE END----------------------------------------
 
 router.put("/warehouses/:id", (req, res) => {
   res.send("NOT IMPLEMENTED: update specific warehouse");
