@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const knex = require("knex")(require("../knexfile"));
 const { v4: uuidv4 } = require("uuid");
 
 router.get("/inventories", (req, res) => {
@@ -18,12 +19,14 @@ router.get("/inventories/:id", (req, res) => {
 
 router.post("/inventories", async (req, res) => {
     try {
+        //need to add validation
+
         req.body.id = uuidv4();
-        console.log(req.body);
-        // const result = await knex("inventories").insert(req.body);
-        // res.status(201).send(result[0]);
+        await knex("inventories").insert(req.body);
+        const newInventoryUrl = `/api/inventories/${req.body.id}`;
+        res.status(201).location(newInventoryUrl).send(newInventoryUrl);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(`Error creating inventory: ${error}`);
     }
 });
 
