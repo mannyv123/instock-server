@@ -17,10 +17,22 @@ router.get("/inventories/:id", (req, res) => {
 //     res.send("NOT IMPLEMENTED: create an inventory");
 // });
 
+//POST route to create new inventory
 router.post("/inventories", async (req, res) => {
     try {
-        //need to add validation
+        //Validation for request body
+        const { warehouse_id, item_name, description, category, status, quantity } = req.body;
+        const warehouseIdCheck = await knex("warehouses").where({ id: warehouse_id });
 
+        if (!warehouse_id || !item_name || !description || !category || !status || !quantity) {
+            return res.status(400).send("Please verify there are no blank input fields");
+        } else if (!warehouseIdCheck.length) {
+            return res.status(400).send(`A warehouse with ID ${warehouse_id} does not exist`);
+        } else if (typeof quantity !== "number") {
+            return res.status(400).send("Quantity value must be a number");
+        }
+
+        //If no validation issues, proceed to create new inventory item
         req.body.id = uuidv4();
         await knex("inventories").insert(req.body);
         const newInventoryUrl = `/api/inventories/${req.body.id}`;
