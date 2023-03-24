@@ -8,53 +8,30 @@ router.get("/warehouses", (req, res) => {
   res.send("NOT IMPLEMENTED: returns a list of warehouses");
 });
 
-router.get("/warehouses/:id", (req, res) => {
-  const id = req.params.id;
-  knex('warehouses')
-    .select('address', 'contact_name', 'contact_phone', 'contact_email')
-    .where('id', id)
-    .then((warehouseData) => {
-      knex('inventories')
-        .select('inventories.item_name', 'inventories.description', 'inventories.category', 'inventories.status', 'inventories.quantity')
-        .where('warehouse_id', id)
-        .then((inventoryData) => {
-          const data = {
-            warehouse: warehouseData[0],
-            inventories: inventoryData
-          };
-          res.status(200).json(data);
-        })
-        .catch((err) => res.status(400).send(`Error retrieving Inventories for Warehouse ${id}: ${err}`));
-    })
-    .catch((err) => res.status(400).send(`Error retrieving Warehouse ${id}: ${err}`));
-});
-
-
-
 
 // ------JIRA TICKET #J2VT1-15 -GJ-------------------------------------
 
-// // GET /api/warehouses/:id
-// router.get("/warehouses/:id", async (req, res) => {
-//   try {
-//     // we are extracting id from params here and storing it in id variable.
-//     // we are using the same id variable in knex("warehouses").
-//     const { id } = req.params;
+// GET /api/warehouses/:id
+router.get("/warehouses/:id", async (req, res) => {
+  try {
+    // we are extracting id from params here and storing it in id variable.
+    // we are using the same id variable in knex("warehouses").
+    const { id } = req.params;
 
-//     const result = await knex("warehouses").where("id", id).first();
-//     if (result) {
-//       // This sends 200 if found
-//       res.status(200).json(result);
-//     } else {
-//       // This sends 404 not found if not found
-//       res.status(404).send(`Warehouse ${id} Not Found`);
-//     }
-//   } catch (error) {
-//     // catches all errors
-//     res.status(404).send(`Warehouse ${id} Not Found`);
-//     console.log(error);
-//   }
-// });
+    const result = await knex("warehouses").where("id", id).first();
+    if (result) {
+      // This sends 200 if found
+      res.status(200).json(result);
+    } else {
+      // This sends 404 not found if not found
+      res.status(404).send(`Warehouse ${id} Not Found`);
+    }
+  } catch (error) {
+    // catches all errors
+    res.status(404).send(`Warehouse ${id} Not Found`);
+    console.log(error);
+  }
+});
 
 // -----------------GJ CODE END----------------------------------------
 
@@ -120,58 +97,6 @@ router.post("/warehouses", async (req, res) => {
 });
 // -----------------GJ CODE END----------------------------------------
 
-router.put('/warehouses/:id', async (req, res) => {
-  const { id } = req.params;
-  const {
-    warehouse_name,
-    address,
-    city,
-    country,
-    contact_name,
-    contact_position,
-    contact_phone,
-    contact_email,
-  } = req.body;
-
-  try {
-    // Use knex to update warehouse details based on the ID provided
-    const updatedWarehouse = await knex('warehouses')
-      .where('id', '=', id)
-      .update({
-        warehouse_name,
-        address,
-        city,
-        country,
-        contact_name,
-        contact_position,
-        contact_phone,
-        contact_email,
-      });
-
-    // If no warehouse is found with the provided ID, return a 404 status code
-    if (!updatedWarehouse) {
-      return res.status(404).json({ message: 'Warehouse not found' });
-    }
-
-    // Return the updated warehouse details in JSON format
-    return res.status(200).json({
-      id,
-      warehouse_name,
-      address,
-      city,
-      country,
-      contact_name,
-      contact_position,
-      contact_phone,
-      contact_email,
-    });
-
-  } catch (err) {
-    // Handle any errors that occur during the database update
-    console.error(err);
-    return res.status(500).json({ message: 'Server error' });
-  }
-});
 
 //-----------Manjot Code Start------------------------
 
