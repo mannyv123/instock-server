@@ -13,10 +13,6 @@ router.get("/inventories/:id", (req, res) => {
 
 //----------------------------Manjot Code Start--------------------------------
 
-// router.post("/inventories", (req, res) => {
-//     res.send("NOT IMPLEMENTED: create an inventory");
-// });
-
 //POST route to create new inventory
 router.post("/inventories", async (req, res) => {
     try {
