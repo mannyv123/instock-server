@@ -5,6 +5,10 @@ const { v4: uuidv4 } = require("uuid");
 
 // ------JIRA TICKET #J2VT1-25 -SEYON-------------------------------------
 router.get("/inventories", (req, res) => {
+  // diving deeper -GJ
+  const { sort_by = "inventory_item", order_by = "asc" } = req.query;
+  // ------------------
+
   knex("inventories")
     .select(
       "inventories.id",
@@ -13,8 +17,14 @@ router.get("/inventories", (req, res) => {
       "inventories.category",
       "inventories.status",
       "inventories.quantity",
-      "warehouses.warehouse_name as warehouse_id"
+      "warehouses.warehouse_name as warehouse_id",
+      // diving deeper -GJ
+      "inventories.item_name as inventory_item"
+      // ------------------
     )
+    // diving deeper -GJ
+    .orderBy(sort_by, order_by)
+    // ------------------
     .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
     .then((data) => {
       res.status(200).json(data);
