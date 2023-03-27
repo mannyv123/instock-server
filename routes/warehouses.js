@@ -125,9 +125,77 @@ router.post("/warehouses", async (req, res) => {
 });
 // -----------------GJ CODE END----------------------------------------
 
-router.put("/warehouses/:id", (req, res) => {
-  res.send("NOT IMPLEMENTED: update specific warehouse");
+// ------JIRA TICKET #J2VT1-12 -GJ-------------------------------------
+router.put("/warehouses/:id", async (req, res) => {
+  try {
+    console.log(req.body);
+    // req.params is the :id in my url
+    const { id } = req.params;
+    const {
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    } = req.body;
+
+    // This is validation
+    // warehouses is the name of the table in knex
+    const warehouse = await knex("warehouses").where("id", id).first();
+
+    const re_email = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}"); // matches w/ something@something.com
+    const re_phone = new RegExp("/*"); // matches w/ 1231231234
+
+    if (!warehouse) {
+      res.status(404).send(`Warehouse ${id} not found!`);
+    } else if (
+      warehouse_name === "" ||
+      address === "" ||
+      city === "" ||
+      country === "" ||
+      contact_name === "" ||
+      contact_position === "" ||
+      contact_phone === "" ||
+      // test compares the regular expression with contact_phone.
+      // "!" if it's true, it means it's valid.
+      !re_phone.test(contact_phone) ||
+      contact_email === "" ||
+      !re_email.test(contact_email)
+    ) {
+      // 400 status means "Bad Request"
+      res.status(400).send("Sorry! Invalid values");
+    } else {
+      // validated
+      // This is the payload we are giving to the database.
+      const warehouse_object = {
+        id,
+        warehouse_name,
+        address,
+        city,
+        country,
+        contact_name,
+        contact_position,
+        contact_phone,
+        contact_email,
+      };
+      await knex("warehouses")
+        .update(warehouse_object)
+        // This is the warehouses id that we want to update.
+        // we are updating it with the values above.
+        .where("id", id);
+      // This sends the warehouse object
+      res.send(warehouse_object);
+    }
+  } catch (error) {
+    // catches all errors
+    res.status(404).send("Sorry! Invalid values");
+    console.log(error);
+  }
 });
+// -----------------GJ CODE END----------------------------------------
 
 //-----------Manjot Code Start------------------------
 
