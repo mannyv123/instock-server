@@ -125,9 +125,56 @@ router.post("/warehouses", async (req, res) => {
 });
 // -----------------GJ CODE END----------------------------------------
 
-router.put("/warehouses/:id", (req, res) => {
-  res.send("NOT IMPLEMENTED: update specific warehouse");
-});
+
+
+// ------JIRA TICKET #J2VT1-18 -SEYON-------------------------------------
+const validateBody = (body) => {
+    const errors = {};
+    const { warehouse_name, address, city, country, contact_name, contact_position, contact_phone, contact_email } = body;
+  
+    if (!warehouse_name) errors.warehouse_name = 'Warehouse name is required';
+    if (!address) errors.address = 'Address is required';
+    if (!city) errors.city = 'City is required';
+    if (!country) errors.country = 'Country is required';
+    if (!contact_name) errors.contact_name = 'Contact name is required';
+    if (!contact_position) errors.contact_position = 'Contact position is required';
+    if (!contact_phone) errors.contact_phone = 'Contact phone is required';
+    if (!contact_email) errors.contact_email = 'Contact email is required';
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)) errors.contact_email = 'Invalid email address';
+    if (!/^\+1\s\(\d{3}\)\s\d{3}-\d{4}$/.test(contact_phone)) errors.contact_phone = 'Invalid phone number';
+    
+    return errors;
+  };
+  
+  router.put('/api/warehouses/:id', (req, res) => {
+    const { id } = req.params;
+    const body = req.body;
+  
+    const errors = validateBody(body);
+  
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
+    }
+  
+    knex('warehouses')
+      .where({ id })
+      .update(body)
+      .returning('*')
+      .then((updatedWarehouse) => {
+        if (updatedWarehouse.length === 0) {
+          return res.status(404).json({ error: 'Warehouse not found' });
+        }
+  
+        res.json(updatedWarehouse[0]);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while updating the warehouse' });
+      });
+  });
+  // -----------------SEYON CODE END----------------------------------------
+
 
 //-----------Manjot Code Start------------------------
 
