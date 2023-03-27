@@ -11,8 +11,18 @@ const { v4: uuidv4 } = require("uuid");
 // ------JIRA TICKET #J2VT1-14 -  FELIPE-------------------------------------
 
 router.get("/warehouses", (req, res) => {
+  // diving deeper -GJ
+  // This gives it two key value pairs
+  // http://localhost:5005/api/warehouses?sort_by=warehouse_name&order_by=asc
+  // https://stackoverflow.com/questions/36353837/knex-js-multiple-orderby-columns
+  const { sort_by = "warehouse_name", order_by = "asc" } = req.query;
+  // ------------------
+
   knex("warehouses")
     .select("*")
+    // diving deeper -GJ
+    .orderBy(sort_by, order_by)
+    // ------------------
     .then((warehouses) => {
       res.status(200).json(warehouses);
     })
