@@ -6,10 +6,10 @@ Welcome to the back-end repository of the InStock project. This repository conta
 ## Table of Contents
 1) [Project Overview](#Project-Overview)
 2) [Screenshots](#Screenshots)
-3) [Features](#Features)
-4) [Tech Stack](#Tech-Stack)
-5) [Run Locally](#Run-Locally)
-6) [Environment Variables](#Environment-Variables)
+3) [Tech Stack](#Tech-Stack)
+5) [Database Setup](#Database-Setup)
+6) [Run Locally](#Run-Locally)
+7) [Environment Variables](#Environment-Variables)
 
 ## Project Overview
 
